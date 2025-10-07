@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package videostreaming;
+
+// Video streaming service definition
+service VideoStreamingService {
+  // Stream video chunks to client
+  rpc StreamVideoChunks(StreamRequest) returns (stream VideoChunk);
+  
+  // Get server health status
+  rpc GetServerHealth(HealthRequest) returns (HealthResponse);
+}
+
+// Request to start streaming a video
+message StreamRequest {
+  string video_id = 1;
+  string quality = 2; // "low", "medium", "high"
+  string client_id = 3;
+}
+
+// Individual video chunk
+message VideoChunk {
+  bytes data = 1;
+  int32 chunk_number = 2;
+  int64 timestamp = 3;
+  int32 size_bytes = 4;
+  string quality = 5;
+}
+
+// Health check request
+message HealthRequest {
+  string node_id = 1;
+}
+
+// Health check response
+message HealthResponse {
+  string status = 1;
+  int32 active_connections = 2;
+  double cpu_usage = 3;
+  double memory_usage = 4;
+  int64 total_chunks_sent = 5;
+}
