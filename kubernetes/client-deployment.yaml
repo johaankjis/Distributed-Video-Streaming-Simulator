@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-client
+  labels:
+    app: video-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: video-client
+  template:
+    metadata:
+      labels:
+        app: video-client
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8001"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: video-client
+        image: video-streaming-client:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8001
+          name: metrics
+          protocol: TCP
+        env:
+        - name: SERVER_ADDRESSES
+          value: "video-server-service:50051"
+        - name: NUM_CLIENTS
+          value: "100"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
