@@ -1,0 +1,84 @@
+{
+  "dashboard": {
+    "title": "Video Streaming Simulator",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Active Connections",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(active_connections)",
+            "legendFormat": "Total Active Connections"
+          }
+        ],
+        "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
+      },
+      {
+        "id": 2,
+        "title": "Chunks Sent per Second",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(video_chunks_sent_total[1m])",
+            "legendFormat": "{{node_id}}"
+          }
+        ],
+        "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 }
+      },
+      {
+        "id": 3,
+        "title": "Stream Latency (P99)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.99, rate(stream_chunk_latency_seconds_bucket[5m]))",
+            "legendFormat": "P99 Latency"
+          }
+        ],
+        "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 }
+      },
+      {
+        "id": 4,
+        "title": "Error Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(chunk_errors_total[1m])",
+            "legendFormat": "{{node_id}}"
+          }
+        ],
+        "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 }
+      },
+      {
+        "id": 5,
+        "title": "Streams by Quality",
+        "type": "piechart",
+        "targets": [
+          {
+            "expr": "sum by (quality) (video_streams_total)",
+            "legendFormat": "{{quality}}"
+          }
+        ],
+        "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 }
+      },
+      {
+        "id": 6,
+        "title": "Node Distribution",
+        "type": "bargauge",
+        "targets": [
+          {
+            "expr": "sum by (node_id) (active_connections)",
+            "legendFormat": "{{node_id}}"
+          }
+        ],
+        "gridPos": { "x": 12, "y": 16, "w": 12, "h": 8 }
+      }
+    ],
+    "refresh": "5s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    }
+  }
+}
